@@ -1,0 +1,183 @@
+.page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: var(--space-3xl) var(--space-lg);
+}
+
+.header {
+    margin-bottom: var(--space-3xl);
+}
+
+.badge {
+    margin-bottom: var(--space-md);
+}
+
+.title {
+    margin-bottom: var(--space-md);
+}
+
+.subtitle {
+    font-size: 1.05rem;
+    max-width: 600px;
+}
+
+/* ── Metrics Grid ─────────────────────────── */
+.metricsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-3xl);
+}
+
+.metricCard {
+    padding: var(--space-xl);
+    text-align: center;
+}
+
+.metricIcon {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-sm);
+}
+
+.metricValue {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.metricValueGood {
+    color: var(--accent-green);
+}
+
+.metricValueWarn {
+    color: var(--accent-orange);
+}
+
+.metricValueBad {
+    color: var(--accent-pink);
+}
+
+.metricLabel {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: var(--space-xs);
+}
+
+.metricBar {
+    width: 100%;
+    height: 4px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-full);
+    margin-top: var(--space-sm);
+    overflow: hidden;
+}
+
+.metricBarFill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease;
+}
+
+/* ── Architecture Section ─────────────────── */
+.archSection {
+    margin-bottom: var(--space-3xl);
+}
+
+.archGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+}
+
+.archCard {
+    padding: var(--space-xl);
+}
+
+.archTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    color: var(--text-primary);
+}
+
+.archDesc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: var(--space-md);
+}
+
+.archTechs {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.archTech {
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: var(--accent-cyan);
+    background: rgba(0, 229, 255, 0.08);
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+}
+
+/* ── Performance Tips ─────────────────────── */
+.tipsSection {
+    margin-top: var(--space-3xl);
+}
+
+.tipsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+}
+
+.tipCard {
+    padding: var(--space-lg);
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-start;
+}
+
+.tipNumber {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent-cyan);
+    opacity: 0.5;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.tipContent {
+    flex: 1;
+}
+
+.tipTitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.tipDesc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .metricsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .archGrid {
+        grid-template-columns: 1fr;
+    }
+}

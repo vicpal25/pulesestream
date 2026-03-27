@@ -1,0 +1,67 @@
+.page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: var(--space-3xl) var(--space-lg);
+}
+
+.header {
+    margin-bottom: var(--space-3xl);
+}
+
+.badge {
+    margin-bottom: var(--space-md);
+}
+
+.title {
+    margin-bottom: var(--space-md);
+}
+
+.subtitle {
+    font-size: 1.05rem;
+    max-width: 600px;
+}
+
+.techSection {
+    margin-top: var(--space-3xl);
+}
+
+.techGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+}
+
+.techCard {
+    padding: var(--space-xl);
+}
+
+.techIcon {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-sm);
+}
+
+.techTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.techDesc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.techStat {
+    margin-top: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+}
+
+@media (max-width: 768px) {
+    .techGrid {
+        grid-template-columns: 1fr;
+    }
+}

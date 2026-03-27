@@ -1,0 +1,168 @@
+.page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: var(--space-3xl) var(--space-lg);
+}
+
+.header {
+    margin-bottom: var(--space-3xl);
+}
+
+.badge {
+    margin-bottom: var(--space-md);
+}
+
+.title {
+    margin-bottom: var(--space-md);
+}
+
+.subtitle {
+    font-size: 1.05rem;
+    max-width: 600px;
+}
+
+/* ── Visualizer ───────────────────────────── */
+.visualizerWrapper {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--bg-secondary);
+    border: 1px solid var(--glass-border);
+    height: 500px;
+}
+
+.canvasContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--glass-border);
+}
+
+.playBtn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: var(--gradient-hero);
+    color: var(--bg-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.playBtn:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-glow-cyan);
+}
+
+.modeSelect {
+    padding: 6px 12px;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+}
+
+.modeSelect:focus {
+    outline: 1px solid var(--accent-cyan);
+}
+
+.volumeSlider {
+    -webkit-appearance: none;
+    width: 100px;
+    height: 4px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-full);
+    outline: none;
+}
+
+.volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    cursor: pointer;
+}
+
+.statusLabel {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-left: auto;
+}
+
+.statusDot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.statusActive {
+    background: var(--accent-green);
+    animation: pulse 2s infinite;
+}
+
+.statusInactive {
+    background: var(--text-muted);
+}
+
+/* ── Info Cards ───────────────────────────── */
+.infoSection {
+    margin-top: var(--space-3xl);
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+}
+
+.infoCard {
+    padding: var(--space-xl);
+}
+
+.infoIcon {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-sm);
+}
+
+.infoTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.infoDesc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .visualizerWrapper {
+        height: 350px;
+    }
+
+    .controls {
+        flex-wrap: wrap;
+    }
+}
