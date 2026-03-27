@@ -1,0 +1,118 @@
+#!/bin/sh
+
+# ─── AI Code Review Pre-Commit Hook ───
+# Reviews staged changes against AGENTS.md rules using OpenAI GPT-4o-mini
+
+printf "🤖 AI Code Review: Checking staged changes against AGENTS.md rules...\n"
+
+# ─── Load API Key ───
+if [ -f .env.local ]; then
+  OPENAI_API_KEY=$(grep '^OPENAI_API_KEY=' .env.local | cut -d '=' -f2-)
+  export OPENAI_API_KEY
+fi
+
+if [ -z "${OPENAI_API_KEY:-}" ]; then
+  printf "⚠️  No OPENAI_API_KEY found. Skipping AI review.\n"
+  printf "   Set it in .env.local to enable AI-powered commit reviews.\n"
+  exit 0
+fi
+
+# ─── Gather context ───
+DIFF=$(git diff --cached --diff-filter=ACMR)
+
+if [ -z "$DIFF" ]; then
+  printf "✅ No staged changes to review.\n"
+  exit 0
+fi
+
+if [ ! -f AGENTS.md ]; then
+  printf "⚠️  No AGENTS.md found. Skipping AI review.\n"
+  exit 0
+fi
+
+# ─── Build JSON payload safely with python3 and temp files ───
+TMPDIR_HOOK=$(mktemp -d)
+trap "rm -rf $TMPDIR_HOOK" EXIT
+
+cat AGENTS.md > "$TMPDIR_HOOK/rules.txt"
+echo "$DIFF" > "$TMPDIR_HOOK/diff.txt"
+
+python3 -c "
+import json, sys
+
+rules_file = sys.argv[1]
+diff_file = sys.argv[2]
+output_file = sys.argv[3]
+
+with open(rules_file) as f:
+    rules = f.read()
+with open(diff_file) as f:
+    diff = f.read()
+
+prompt = (
+    'You are a strict code reviewer. Review the following git diff against '
+    'the project coding rules below.\n\n'
+    'RULES:\n' + rules + '\n\n'
+    'GIT DIFF:\n' + diff + '\n\n'
+    'Instructions:\n'
+    '- Check ONLY for violations of the rules listed above.\n'
+    '- If there are NO violations, respond with exactly: LGTM\n'
+    '- If there ARE violations, respond with a short summary of each violation, '
+    'including the file and what rule was broken. Be concise.\n'
+    '- Do NOT suggest improvements beyond what the rules require.\n'
+    '- Do NOT comment on code quality unless a specific rule is broken.'
+)
+
+payload = {
+    'model': 'gpt-4o-mini',
+    'messages': [{'role': 'user', 'content': prompt}],
+    'temperature': 0,
+    'max_tokens': 1024
+}
+
+with open(output_file, 'w') as f:
+    json.dump(payload, f)
+" "$TMPDIR_HOOK/rules.txt" "$TMPDIR_HOOK/diff.txt" "$TMPDIR_HOOK/payload.json"
+
+if [ $? -ne 0 ]; then
+  printf "⚠️  Failed to build request. Skipping AI review.\n"
+  exit 0
+fi
+
+# ─── Call OpenAI API ───
+HTTP_CODE=$(curl -s -o "$TMPDIR_HOOK/response.json" -w "%{http_code}" \
+  https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d @"$TMPDIR_HOOK/payload.json")
+
+# ─── Handle API errors ───
+if [ "$HTTP_CODE" != "200" ]; then
+  ERROR_MSG=$(python3 -c "import sys,json; data=json.load(open(sys.argv[1])); print(data.get('error',{}).get('message','Unknown error'))" "$TMPDIR_HOOK/response.json" 2>/dev/null || echo "HTTP $HTTP_CODE")
+  printf "⚠️  OpenAI API error: %s\n" "$ERROR_MSG"
+  printf "   Skipping AI review. Commit will proceed.\n"
+  exit 0
+fi
+
+# ─── Parse result ───
+REVIEW=$(python3 -c "import sys,json; data=json.load(open(sys.argv[1])); print(data['choices'][0]['message']['content'])" "$TMPDIR_HOOK/response.json" 2>/dev/null)
+
+if [ -z "$REVIEW" ]; then
+  printf "⚠️  Could not parse AI response. Skipping review.\n"
+  exit 0
+fi
+
+# ─── Check verdict ───
+if echo "$REVIEW" | grep -qi "LGTM"; then
+  printf "✅ AI Review passed! No rule violations found.\n"
+  exit 0
+else
+  printf "\n"
+  printf "❌ AI Review found rule violations:\n"
+  printf "\n"
+  printf "%s\n" "$REVIEW"
+  printf "\n"
+  printf "Commit blocked. Fix the violations above and try again.\n"
+  printf "To skip AI review: git commit --no-verify\n"
+  exit 1
+fi

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prepare": "husky"
   },
   "dependencies": {
     "@react-three/drei": "^9.88.17",
@@ -25,6 +26,7 @@
     "@types/three": "^0.183.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.0",
+    "husky": "^9.1.7",
     "typescript": "^5"
   }
 }
